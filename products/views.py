@@ -107,3 +107,22 @@ def search(request) -> Response:
     )
     serializer = ProductSerializer(products, many=True)
     return Response(serializer.data)
+
+
+@api_view(["POST"])
+def postProduct(request):
+    data = request.data
+    print(data)
+    try:
+        product = Product.objects.create(
+            name=data["name"],
+            slug=data["slug"],
+            description=data["description"],
+            price=data["price"],
+            image=data["image"],
+            thumbnail=data["thumbnail"],
+            category_id=data["category_id"]
+        )
+        return Response({"message": "Product created successfully"}, status=201)
+    except Exception as e:
+        return Response({"message": str(e)}, status=400)
