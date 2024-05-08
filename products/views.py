@@ -2,6 +2,7 @@ import logging
 import sys
 from django.db.models import Q
 from django.http import HttpRequest
+from django.http import JsonResponse
 from rest_framework.permissions import IsAuthenticated
 
 
@@ -112,7 +113,8 @@ def search(request) -> Response:
 @api_view(["POST"])
 def postProduct(request):
     data = request.data
-    print(data)
+    print("Received data:", data)  # Log the received data
+
     try:
         product = Product.objects.create(
             name=data["name"],
@@ -123,6 +125,7 @@ def postProduct(request):
             thumbnail=data["thumbnail"],
             category_id=data["category_id"]
         )
-        return Response({"message": "Product created successfully"}, status=201)
+        return Response({"message": "Product created successfully"}, status=status.HTTP_201_CREATED)
     except Exception as e:
-        return Response({"message": str(e)}, status=400)
+        print("Error:", str(e))  # Log the error
+        return Response({"message": str(e)}, status=status.HTTP_400_BAD_REQUEST)
