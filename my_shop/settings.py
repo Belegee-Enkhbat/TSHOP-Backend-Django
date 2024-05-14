@@ -45,7 +45,6 @@ INSTALLED_APPS = [
     "djoser",
     "products",
     "order",
-    "blog",
 ]
 
 CORS_ALLOW_ALL_ORIGINS = True
