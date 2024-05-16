@@ -34,6 +34,12 @@ class LatestProductsList(APIView):
         serializer = ProductSerializer(products, many=True)
         return Response(serializer.data)
 
+class ProductsCategoryList(APIView):
+    def get(self, _: HttpRequest) -> Response:
+        category = Category.objects.all()[0:8]
+        serializer = CategorySerializer(category, many=True)
+        print("data", serializer.data)
+        return Response(serializer.data)    
 
 class ProductDetail(APIView):
 
@@ -140,3 +146,28 @@ def postProduct(request):
     except Exception as e:
         print("Error:", str(e))  # Log the error
         return Response({"message": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+    
+
+@api_view(["POST"])
+def postCategory(request):
+    data = request.data
+    thumbnail_base64 = data.get('thumbnail')
+    thumbnail_data = base64.b64decode(thumbnail_base64.split(",")[1])     
+    print("-----------")
+    print("Received data:", data)  # Log the received data
+    print("-----------")
+
+    try:
+        # давтагдахгүй нэр
+        filename = f"category_{uuid.uuid4().hex}.png"
+         # Create a ContentFile with the decoded data
+        thumbnail_file = ContentFile(thumbnail_data, name=filename) 
+        category = Category.objects.create(
+            name=data["name"],
+            slug=data["slug"],
+            thumbnail=thumbnail_file,
+        )
+        return Response({"message": "Category created successfully"}, status=status.HTTP_201_CREATED)
+    except Exception as e:
+        print("Error:", str(e))  # Log the error
+        return Response({"message": str(e)}, status=status.HTTP_400_BAD_REQUEST)    

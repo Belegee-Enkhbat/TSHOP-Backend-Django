@@ -27,6 +27,7 @@ class CategorySerializer(serializers.ModelSerializer):
             "id",
             "name",
             "get_absolute_url",
+            "get_thumbnail",
             "products",
         )
 

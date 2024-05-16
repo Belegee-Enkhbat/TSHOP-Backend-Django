@@ -10,6 +10,7 @@ from PIL import Image
 class Category(models.Model):
     name = models.CharField(max_length=255)
     slug = models.SlugField()
+    thumbnail = models.ImageField(upload_to="uploads/", blank=True, null=True)
 
     class Meta:
         ordering = ("name",)
@@ -20,7 +21,33 @@ class Category(models.Model):
     def get_absolute_url(self):
         return f"/{self.slug}"
 
+    def get_thumbnail(self) -> str:
+        print("get thumb")
+        if self.thumbnail:
+            print("url, ",  self.thumbnail.url)
+            return APP_URL + self.thumbnail.url
+        else:
+            if self.image:
+                self.thumbnail = self.make_thumbnail(self.image)
+                self.save()
+                print("url, ",  APP_URL + self.thumbnail.url)
 
+                return APP_URL + self.thumbnail.url
+
+
+
+    def make_thumbnail(self, image, size=(300, 200)) -> File:
+        img = Image.open(image)
+        img.convert("RGB")
+        img.thumbnail(size)
+
+        thumb_io = BytesIO()
+        img.save(thumb_io, "PNG", quality=85)
+
+        thumbnail = File(thumb_io, name=image.name)
+
+        return thumbnail
+    
 class Product(models.Model):
     category = models.ForeignKey(
         Category, related_name="products", on_delete=models.CASCADE
@@ -47,6 +74,7 @@ class Product(models.Model):
             return APP_URL + self.image.url
 
     def get_thumbnail(self) -> str:
+        print("get thumb product")
         if self.thumbnail:
             return APP_URL + self.thumbnail.url
         else:
