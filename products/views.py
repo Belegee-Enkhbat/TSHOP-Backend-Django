@@ -5,6 +5,9 @@ from django.http import HttpRequest
 from django.http import JsonResponse
 from rest_framework.permissions import IsAuthenticated
 
+import base64
+from django.core.files.base import ContentFile
+import uuid
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -113,16 +116,24 @@ def search(request) -> Response:
 @api_view(["POST"])
 def postProduct(request):
     data = request.data
+    thumbnail_base64 = data.get('thumbnail')
+    thumbnail_data = base64.b64decode(thumbnail_base64.split(",")[1])     
+    print("-----------")
     print("Received data:", data)  # Log the received data
+    print("-----------")
 
     try:
+        # давтагдахгүй нэр
+        filename = f"thumbnail_{uuid.uuid4().hex}.png"
+         # Create a ContentFile with the decoded data
+        thumbnail_file = ContentFile(thumbnail_data, name=filename) 
         product = Product.objects.create(
             name=data["name"],
             slug=data["slug"],
             description=data["description"],
             price=data["price"],
             image=data["image"],
-            thumbnail=data["thumbnail"],
+            thumbnail=thumbnail_file,
             category_id=data["category_id"]
         )
         return Response({"message": "Product created successfully"}, status=status.HTTP_201_CREATED)
