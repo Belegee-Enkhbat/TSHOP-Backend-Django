@@ -104,3 +104,12 @@ class ProductReview(models.Model):
     content = models.TextField(blank=True, null=True)
     stars = models.IntegerField()
     date_added = models.DateTimeField(auto_now_add=True)
+
+
+class ProductBrand(models.Model):
+    cName = models.CharField(max_length=255)
+    strDescription = models.TextField(blank=True, null=True)
+    imgLogo = models.ImageField(upload_to="uploads/", blank=True, null=True)
+    dateAdded = models.DateTimeField(auto_now_add=True)
+    iRating = models.IntegerField()
+
