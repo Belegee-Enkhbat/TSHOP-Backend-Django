@@ -123,10 +123,7 @@ def search(request) -> Response:
 def postProduct(request):
     data = request.data
     thumbnail_base64 = data.get('thumbnail')
-    thumbnail_data = base64.b64decode(thumbnail_base64.split(",")[1])     
-    print("-----------")
-    print("Received data:", data)  # Log the received data
-    print("-----------")
+    thumbnail_data = base64.b64decode(thumbnail_base64.split(",")[1])
 
     try:
         # давтагдахгүй нэр
@@ -152,10 +149,7 @@ def postProduct(request):
 def postCategory(request):
     data = request.data
     thumbnail_base64 = data.get('thumbnail')
-    thumbnail_data = base64.b64decode(thumbnail_base64.split(",")[1])     
-    print("-----------")
-    print("Received data:", data)  # Log the received data
-    print("-----------")
+    thumbnail_data = base64.b64decode(thumbnail_base64.split(",")[1])
 
     try:
         # давтагдахгүй нэр
