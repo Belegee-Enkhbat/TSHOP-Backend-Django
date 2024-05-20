@@ -30,7 +30,7 @@ logger = logging.getLogger(__name__)
 
 class LatestProductsList(APIView):
     def get(self, _: HttpRequest) -> Response:
-        products = Product.objects.all()[0:4]
+        products = Product.objects.all()
         serializer = ProductSerializer(products, many=True)
         return Response(serializer.data)
 
@@ -124,6 +124,9 @@ def postProduct(request):
     data = request.data
     thumbnail_base64 = data.get('thumbnail')
     thumbnail_data = base64.b64decode(thumbnail_base64.split(",")[1])
+    print("-----------")
+    print("Received data:", data)  # Log the received data
+    print("-----------")
 
     try:
         # давтагдахгүй нэр
@@ -150,6 +153,9 @@ def postCategory(request):
     data = request.data
     thumbnail_base64 = data.get('thumbnail')
     thumbnail_data = base64.b64decode(thumbnail_base64.split(",")[1])
+    print("-----------")
+    print("Received data:", data)  # Log the received data
+    print("-----------")
 
     try:
         # давтагдахгүй нэр
